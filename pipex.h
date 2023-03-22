@@ -34,6 +34,18 @@
 # define CYN  "\x1B[36m"
 # define WHT  "\x1B[37m"
 
+
+typedef struct s_prog
+{
+	char	*infile_path; // if not defind, default is STDIN
+	char	*outfile_path; // if not defind, default is STDOUT
+
+	int		outfile_permissions;
+
+	char	**cmds;
+	char	*heredoc_deli;
+}	t_prog;
+
 // GET_FULL_NAME
 char	**get_full_cmd(char *cmd, char **env);
 
