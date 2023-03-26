@@ -78,7 +78,7 @@ void	pipe_the_stuff(t_prog *prog)
 			file_fds[0] = open(prog->infile_path, O_RDONLY);
 		pipe(pipees);
 		file_fds[1] = figure_fd1(prog, i, pipees);
-		stat = piper(cmds, prog->env, file_fds);
+		stat = piper(cmds, prog, file_fds);
 		i += 2;
 	}
 	exit (stat);
@@ -146,6 +146,7 @@ void	here_doc(t_prog *prog)
 		exit (1);
 
 	read_input(prog->heredoc_deli, pipees[1]);
+	close (prog->infile_fd);
 	prog->infile_fd = pipees[0];
 	pipe_the_stuff(prog);
 }
@@ -156,49 +157,25 @@ t_prog	*init_prog(char *envp[])
 	prog = ft_calloc(1, sizeof(t_prog));
 
 	prog->env = envp;
-	prog->infile_fd = STDIN_FILENO;
-	prog->outfile_fd = STDOUT_FILENO;
+	prog->infile_fd = dup(STDIN_FILENO);
+	prog->outfile_fd = dup(STDOUT_FILENO);
 	return (prog);
-}
-
-void	exit_prog(t_prog *prog, int exitstat)
-{
-	free (prog);
-	exit (exitstat);
 }
 
 int	main(int argc, char *argv[], char *env[])
 {
-
-	t_prog *prog;
-	prog = init_prog(env);
-
-/* 	int argc = 10;
-	char **argv = ((char *[]){"prog", "<<", "DEL", "cat -e" ,"|", "wc", "|", "cat", ">", "outfile", NULL}); */
-	
 	int i;
+	int j;
+	t_prog *prog;
+
+	prog = init_prog(env);
 	if (argc == 1)
-	{
-		argv = ft_split("./a.out << DEL cat", ' ');
-		argc = ft_arrlen((void **) argv);
-
-		// exit_prog(prog, (printf("WRONG NUM OF ARGUMENTS!\n"), 1));
-
-	}
-	else if (argc == 2)
+		exit_prog(prog, (printf("WRONG NUM OF ARGUMENTS!\n"), 1));
+	/* else if (argc == 2)
 	{
 		argv = ft_split (argv[1], ' ');
 		argc = ft_arrlen((void **) argv);
-		//prog->cmds = &argv[1];
-		//PIPE t_prog
-	}
-	printf("cmds num: %i\n", argc);
-
-	i = 0;
-	 while (argv[i])
-	 	printf("\t%s\n", argv[i++]);
-
-
+	} */
 	argc -= 1;
 	argv += 1;
 	if (ft_strncmp(argv[0], "<", 1) == 0)
@@ -206,6 +183,7 @@ int	main(int argc, char *argv[], char *env[])
 		if (ft_strncmp(argv[0], "<", 2) == 0)
 		{
 			prog->infile_path = argv[1];
+			close(prog->infile_fd);
 			prog->infile_fd = -1;
 			argv += 2;
 			argc -= 2;
@@ -230,10 +208,7 @@ int	main(int argc, char *argv[], char *env[])
 			exit_prog(prog, (printf("WRONG OPTION: %s\n", argv[argc - 2]), 1));
 		argv[argc - 2] = NULL;
 	}
-
 	i = 1;
-	int j;
-
 	while (argv[i])
 	{
 		if (ft_strncmp(argv[i], "|", 2) == 0)
@@ -247,14 +222,6 @@ int	main(int argc, char *argv[], char *env[])
 	}
 	prog->cmds = argv;
 	prog->cmd_num = i;
-
-	printf("cmds num: %i\n", prog->cmd_num);
-	ft_printf("\ncmds:");
-	i = 0;
-	 while (prog->cmds[i])
-	 	printf("\t%s\n", prog->cmds[i++]);
-	
-
 	if (prog->heredoc_deli)
 		here_doc(prog);
 	pipe_the_stuff(prog);
@@ -262,59 +229,10 @@ int	main(int argc, char *argv[], char *env[])
 	return (0);
 }
 
+/* 	printf("cmds num: %i\n", prog->cmd_num);
+	ft_printf("\ncmds:");
+	i = 0;
+	 while (prog->cmds[i])
+	 	printf("\t%s\n", prog->cmds[i++]); */
 
 
-
-/*
-	(void) argc;
-	(void) argv;
-	pipe_the_stuff(4,
-		(char *[]) {"here_doc", "LIM" ,"wc", "catsa", "test.txt"}, env);
-*/
-
-/* 
-		int	pipees[2];
-	int	infile;
-
-	if (argc < 4)
-	{
-		ft_printf("Invalid number of arguments.\n");
-		return (1);
-	}
-	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-	{
-		if (pipe(pipees) == -1)
-			return (-1);
-		read_input(argv[2], pipees[1]);
-		pipe_the_stuff(argc - 1, &argv[1], env, pipees[0]);
-	}
-	infile = open(argv[1], O_RDONLY);
-	if (infile == -1)
-		exit_prog(prog, (perror(argv[1]), 2));
-	close(infile);
-	pipe_the_stuff(argc, argv, env, -1);
-*/
-
-
-
-
-
-/* int	main(int argc, char *argv[], char *env[])
-{
-	int	infile;
-
-	if (argc < 5)
-	{
-		ft_printf("Invalid number of arguments.\n");
-		return (1);
-	}
-	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-		here_doc (argc, argv, env);
-	infile = open(argv[1], O_RDONLY);
-	if (infile == -1)
-		exit_prog(prog, (perror(argv[1]), 2));
-	close(infile);
-	pipe_the_stuff(argc, argv, env, -1);
-	return (0);
-}
- */

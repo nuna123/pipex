@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-char	*str_append (char *s1, char *s2, char *spacer)
+char	*str_append(char *s1, char *s2, char *spacer)
 {
 	char	*res;
 	char	*temp;

@@ -34,11 +34,10 @@
 # define CYN  "\x1B[36m"
 # define WHT  "\x1B[37m"
 
-
 typedef struct s_prog
 {
-	char	*infile_path; // if not defind, default is STDIN
-	char	*outfile_path; // if not defind, default is STDOUT
+	char	*infile_path;
+	char	*outfile_path;
 
 	int		infile_fd;
 	int		outfile_fd;
@@ -56,12 +55,14 @@ typedef struct s_prog
 char	**get_full_cmd(char *cmd, char **env);
 
 //PIPER
-int		piper(char **cmds[2], char *env[],
+int		piper(char **cmds[2], t_prog *prog,
 			int file_fds[2]);
+
 //PIPEX_UTILS
 void	free_arr(void **arr);
 int		release_cmds(char **cmds[2]);
 void	close_fds(int arr[]);
 void	cpy_arr(char **dest, char **src);
 char	**split_command(char *cmd);
+void	exit_prog(t_prog *prog, int exitstat);
 #endif
