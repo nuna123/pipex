@@ -14,7 +14,6 @@ LIBFT_FOL		= Libft/
 LIBFT			= ${addprefix ${LIBFT_FOL}, libft.a}
 
 SRCS			=	${addprefix ${SRC_DIR}, ${addsuffix .c, ${SRC_FILES}}}
-BONUS_SRCS			=	${addprefix ${SRC_DIR}, ${addsuffix .c, ${BONUS_SRC_FILES}}}
 
 # Colors
 NRM_COLOR		=	\033[0;39m
@@ -31,10 +30,6 @@ all:		${NAME}
 ${NAME}:	${SRCS} ${LIBFT}
 			@ cc ${CFLAGS} ${SRCS} ${LIBFT} -I${LIBFT_FOL} -o ${NAME}
 			@ echo "${GREEN}pipex compiled!${NRM_COLOR}"
-
-bonus:		${BONUS_SRCS}
-			@ cc ${CFLAGS} ${BONUS_SRCS} ${LIBFT} -I${LIBFT_FOL} -o ${NAME}
-			@ echo "${GREEN}BONUS pipex compiled!${NRM_COLOR}"
 
 ${LIBFT}:	
 			@ make -C ${LIBFT_FOL} re all bonus extra --no-print-directory --silent
