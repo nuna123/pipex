@@ -55,6 +55,7 @@ int				ft_atoi(const char *nptr);
 void			*ft_calloc(size_t nmemb, size_t size);
 char			*ft_strdup(const char *s);
 char			*str_append (char *s1, char *s2, char *spacer);
+size_t			ft_arrlen(void **s);
 
 // PT2
 char			*ft_substr(char const *s, unsigned int start, size_t len);

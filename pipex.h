@@ -40,10 +40,16 @@ typedef struct s_prog
 	char	*infile_path; // if not defind, default is STDIN
 	char	*outfile_path; // if not defind, default is STDOUT
 
+	int		infile_fd;
+	int		outfile_fd;
+
 	int		outfile_permissions;
 
 	char	**cmds;
+	int		cmd_num;
+
 	char	*heredoc_deli;
+	char	**env;
 }	t_prog;
 
 // GET_FULL_NAME
