@@ -52,17 +52,24 @@ typedef struct s_prog
 }	t_prog;
 
 // GET_FULL_NAME
-char	**get_full_cmd(char *cmd, char **env);
+char		**get_full_cmd(char *cmd, char **env);
 
 //PIPER
-int		piper(char **cmds[2], t_prog *prog,
-			int file_fds[2]);
+int			piper(char **cmds[2], t_prog *prog,
+				int file_fds[2]);
 
 //PIPEX_UTILS
-void	free_arr(void **arr);
-int		release_cmds(char **cmds[2]);
-void	close_fds(int arr[]);
-void	cpy_arr(char **dest, char **src);
-char	**split_command(char *cmd);
-void	exit_prog(t_prog *prog, int exitstat);
+void		free_arr(void **arr);
+int			release_cmds(char **cmds[2]);
+void		close_fds(int arr[]);
+void		cpy_arr(char **dest, char **src);
+void		exit_prog(t_prog *prog, int exitstat);
+
+//PROG_CREATION
+// static t_prog	*init_prog(char *envp[]);
+// static void	get_infile(int argc, char *argv[], t_prog *prog);
+// static void	get_outfile(int argc, char *argv[], t_prog *prog);
+// static void	get_cmds(char *argv[], t_prog *prog);
+t_prog		*prog_creation(int argc, char *argv[], char *env[]);
+
 #endif

@@ -7,11 +7,8 @@ SRC_FILES		=	pipex\
 					piper\
 					get_full_cmd\
 					pipex_utils\
+					prog_creation
 
-BONUS_SRC_FILES		=	pipex_bonus\
-						piper\
-						get_full_cmd\
-						pipex_utils\
 
 LIBFT_FOL		= Libft/
 LIBFT			= ${addprefix ${LIBFT_FOL}, libft.a}

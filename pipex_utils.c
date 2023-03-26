@@ -59,6 +59,7 @@ void	cpy_arr(char **dest, char **src)
 
 void	exit_prog(t_prog *prog, int exitstat)
 {
-	free (prog);
+	if (prog)
+		free (prog);
 	exit (exitstat);
 }
