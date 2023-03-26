@@ -112,6 +112,7 @@ void	pipe_the_stuff(int argc, char *argv[], char *env[], int in_fd)
 	exit (stat);
 }
  */
+
 void	read_input(char *del, int out_fd)
 {
 	char	*line;
@@ -144,7 +145,6 @@ void	here_doc(t_prog *prog)
 
 	if (pipe(pipees) == -1)
 		exit (1);
-
 	read_input(prog->heredoc_deli, pipees[1]);
 	close (prog->infile_fd);
 	prog->infile_fd = pipees[0];
@@ -153,29 +153,28 @@ void	here_doc(t_prog *prog)
 
 t_prog	*init_prog(char *envp[])
 {
-	t_prog *prog;
-	prog = ft_calloc(1, sizeof(t_prog));
+	t_prog	*prog;
 
+	prog = ft_calloc(1, sizeof(t_prog));
 	prog->env = envp;
 	prog->infile_fd = dup(STDIN_FILENO);
 	prog->outfile_fd = dup(STDOUT_FILENO);
 	return (prog);
 }
 
+
+
+
+
 int	main(int argc, char *argv[], char *env[])
 {
-	int i;
-	int j;
-	t_prog *prog;
+	int		i;
+	int		j;
+	t_prog	*prog;
 
 	prog = init_prog(env);
 	if (argc == 1)
 		exit_prog(prog, (printf("WRONG NUM OF ARGUMENTS!\n"), 1));
-	/* else if (argc == 2)
-	{
-		argv = ft_split (argv[1], ' ');
-		argc = ft_arrlen((void **) argv);
-	} */
 	argc -= 1;
 	argv += 1;
 	if (ft_strncmp(argv[0], "<", 1) == 0)
@@ -225,7 +224,6 @@ int	main(int argc, char *argv[], char *env[])
 	if (prog->heredoc_deli)
 		here_doc(prog);
 	pipe_the_stuff(prog);
-
 	return (0);
 }
 
@@ -234,5 +232,8 @@ int	main(int argc, char *argv[], char *env[])
 	i = 0;
 	 while (prog->cmds[i])
 	 	printf("\t%s\n", prog->cmds[i++]); */
-
-
+	/* else if (argc == 2)
+	{
+		argv = ft_split (argv[1], ' ');
+		argc = ft_arrlen((void **) argv);
+	} */

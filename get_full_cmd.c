@@ -21,6 +21,24 @@ char	*improved_trim(char *str, char *charset)
 	return (temp);
 }
 
+static int	split_extander(char **split)
+{
+	int	j;
+
+	j = 0;
+	while (++j && split[j])
+	{
+		split[0] = str_append (split[0], split[j], " ");
+		if (ft_strchr(split[j], '\'') || !split[j + 1])
+		{
+			split[j] = (free (split[j]), NULL);
+			return (j);
+		}
+		split[j] = (free (split[j]), NULL);
+	}
+	return (j);
+}
+
 char	**split_command(char *cmd)
 {
 	char	**split;
@@ -33,17 +51,7 @@ char	**split_command(char *cmd)
 	{
 		if (ft_strchr(split[i], '\''))
 		{
-			j = 0;
-			while (++j && split[i + j])
-			{
-				split[i] = str_append (split[i], split[i + j], " ");
-				if (ft_strchr(split[i + j], '\'') || !split[i + j + 1])
-				{
-					split[i + j] = (free (split[i + j]), NULL);
-					break ;
-				}
-				split[i + j] = (free (split[i + j]), NULL);
-			}
+			j = split_extander(&split[i]);
 			split[i] = improved_trim(split[i], "\'");
 			cpy_arr(&(split[i + 1]), &(split[i + j + 1]));
 		}
@@ -51,7 +59,7 @@ char	**split_command(char *cmd)
 	return (split);
 }
 
-static void	extander(char **split_path, char **splot)
+static void	gfc_extander(char **split_path, char **splot)
 {
 	int		i;
 	char	*temp;
@@ -89,7 +97,7 @@ char	**get_full_cmd(char *cmd, char **env)
 		env++;
 	}
 	split_path = ft_split(path, ':');
-	extander(split_path, splot);
+	gfc_extander(split_path, splot);
 	free_arr((void **) split_path);
 	return (splot);
 }
