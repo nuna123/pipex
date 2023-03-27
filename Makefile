@@ -10,7 +10,7 @@ SRC_FILES		=	pipex\
 					prog_creation
 
 
-LIBFT_FOL		= Libft/
+LIBFT_FOL		= ../Libft/
 LIBFT			= ${addprefix ${LIBFT_FOL}, libft.a}
 
 SRCS			=	${addprefix ${SRC_DIR}, ${addsuffix .c, ${SRC_FILES}}}

@@ -60,6 +60,9 @@ void	cpy_arr(char **dest, char **src)
 void	exit_prog(t_prog *prog, int exitstat)
 {
 	if (prog)
+	{
+		free_arr((void **) prog->cmds);
 		free (prog);
+	}
 	exit (exitstat);
 }

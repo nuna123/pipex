@@ -103,7 +103,7 @@ void	read_input(char *del, int out_fd)
 		free(line);
 		if (done)
 			break ;
-		ft_printf("heredoc>");
+		ft_printf("heredoc> ");
 		line = get_next_line(STDIN_FILENO);
 	}
 	close(out_fd);
@@ -121,6 +121,18 @@ void	here_doc(t_prog *prog)
 	pipe_the_stuff(prog);
 }
 
+/* void pipex (int argc, char *argv[], char *env[])
+{
+	t_prog	*prog;
+
+	// if (argc == 1)
+	// 	exit_prog(NULL, (printf("WRONG NUM OF ARGUMENTS!\n"), 1));
+	prog = prog_creation(argc, argv, env);
+	if (prog->heredoc_deli)
+		here_doc(prog);
+	pipe_the_stuff(prog);
+} */
+
 int	main(int argc, char *argv[], char *env[])
 {
 	t_prog	*prog;
@@ -133,6 +145,14 @@ int	main(int argc, char *argv[], char *env[])
 	pipe_the_stuff(prog);
 	return (0);
 }
+/*
+	printf("-------------------\nARGC: %i\n", argc);
+	ft_printf("\nARGV:");
+	int i = 0;
+	 while (argv[i])
+	 	printf("\t%s\n", argv[i++]);
+	printf("-------------------\n");
+*/
 
 /*
 	printf("cmds num: %i\n", prog->cmd_num);

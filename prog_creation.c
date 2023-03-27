@@ -30,7 +30,7 @@ static void	get_infile(int *argc, char **argv[], t_prog *prog)
 	char	**args;
 
 	args = *argv;
-	if (ft_strncmp(args[0], "<", 1) == 0)
+	if (ft_strncmp(args[0], "<", 1) == 0 && *argc > 1)
 	{
 		if (ft_strncmp(args[0], "<", 2) == 0)
 		{
@@ -53,6 +53,8 @@ static void	get_infile(int *argc, char **argv[], t_prog *prog)
 
 static void	get_outfile(int *argc, char **argv[], t_prog *prog)
 {
+	if (*argc < 2)
+		return ;
 	if (ft_strncmp((*argv)[(*argc) - 2], ">", 1) == 0)
 	{
 		prog->outfile_path = (*argv)[*argc - 1];
@@ -66,6 +68,33 @@ static void	get_outfile(int *argc, char **argv[], t_prog *prog)
 	}
 }
 
+static void	get_cmds(char *argv[], t_prog *prog)
+{
+	int		i;
+	char	*temp;
+	char	*cmds;
+
+	i = -1;
+	cmds = ft_strdup("");
+	while (argv[++i])
+	{
+		temp = ft_strjoin(cmds, argv[i]);
+		cmds = (free (cmds), temp);
+		temp = ft_strjoin(cmds, " ");
+		cmds = (free (cmds), temp);
+	}
+	prog->cmds = ft_split(cmds, '|');
+	free(cmds);
+	i = -1;
+	while (prog->cmds[++i])
+	{
+		temp = ft_strtrim(prog->cmds[i], " ");
+		free (prog->cmds[i]);
+		prog->cmds[i] = temp;
+	}
+	prog->cmd_num = ft_arrlen((void **) prog->cmds);
+}
+/* 
 static void	get_cmds(char *argv[], t_prog *prog)
 {
 	int	i;
@@ -86,6 +115,7 @@ static void	get_cmds(char *argv[], t_prog *prog)
 	prog->cmds = argv;
 	prog->cmd_num = i;
 }
+ */
 
 t_prog	*prog_creation(int argc, char *argv[], char *env[])
 {
