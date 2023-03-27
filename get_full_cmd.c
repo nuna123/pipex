@@ -101,8 +101,8 @@ char	**get_full_cmd(char *cmd, char **env)
 	free_arr((void **) split_path);
 	return (splot);
 }
-/* 
 
+/*
 int	main(int argc, char *argv[], char *env[])
 {
 	char	**fullname;
@@ -111,13 +111,11 @@ int	main(int argc, char *argv[], char *env[])
 		fullname = get_full_cmd(argv[1], env);
 	else
 		fullname = get_full_cmd("ls", env);
-
 	ft_printf("FULLNAME: \n");
 	for (int i = 0;fullname[i]; i++)
 	{
 		ft_printf("%s, ", fullname[i]);
 		free(fullname[i]);
-
 	}
 	free(fullname);
 	return (0);

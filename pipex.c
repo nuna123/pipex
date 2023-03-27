@@ -40,7 +40,7 @@ void	printeeer(char **cmd1, char **cmd2, char *infile_path, char *outfile_path)
 }
 
  */
-// int	figure_fd1(int args[3], char *argv[], int pipees[2])
+
 int	figure_fd1(t_prog *prog, int i, int pipees[2])
 {
 	int	res;
@@ -55,7 +55,6 @@ int	figure_fd1(t_prog *prog, int i, int pipees[2])
 	return (res);
 }
 
-// void	pipe_the_stuff(int argc, char *argv[], char *env[], int in_fd)
 void	pipe_the_stuff(t_prog *prog)
 {
 	int		file_fds[2];
@@ -83,35 +82,6 @@ void	pipe_the_stuff(t_prog *prog)
 	}
 	exit (stat);
 }
-/* 
-void	pipe_the_stuff(int argc, char *argv[], char *env[], int in_fd)
-{
-	int		file_fds[2];
-	char	**cmds[2];
-	int		pipees[2];
-	int		i;
-	int		stat;
-
-	i = 2;
-	cmds[1] = NULL;
-	while (i < argc - 1)
-	{
-		cmds[0] = get_full_cmd(argv[i], env);
-		if (i + 1 < argc - 1)
-			cmds[1] = get_full_cmd(argv[i + 1], env);
-		file_fds[0] = pipees[0];
-		if (i == 2 && in_fd != -1)
-			file_fds[0] = in_fd;
-		else if (i == 2)
-			file_fds[0] = open(argv[1], O_RDONLY);
-		pipe(pipees);
-		file_fds[1] = figure_fd1((int []){i, argc, in_fd}, argv, pipees);
-		stat = piper(cmds, env, file_fds);
-		i += 2;
-	}
-	exit (stat);
-}
- */
 
 void	read_input(char *del, int out_fd)
 {
@@ -164,13 +134,18 @@ int	main(int argc, char *argv[], char *env[])
 	return (0);
 }
 
-/* 	printf("cmds num: %i\n", prog->cmd_num);
+/*
+	printf("cmds num: %i\n", prog->cmd_num);
 	ft_printf("\ncmds:");
 	i = 0;
 	 while (prog->cmds[i])
-	 	printf("\t%s\n", prog->cmds[i++]); */
-	/* else if (argc == 2)
+	 	printf("\t%s\n", prog->cmds[i++]);
+*/
+
+/*
+	else if (argc == 2)
 	{
 		argv = ft_split (argv[1], ' ');
 		argc = ft_arrlen((void **) argv);
-	} */
+	}
+*/

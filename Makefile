@@ -1,7 +1,7 @@
 NAME			=	pipex
 
 OBJ_DIR			=	objs/
-CFLAGS			=	-Wall -Werror -Wextra 
+CFLAGS			=	-Wall -Werror -Wextra -fsanitize=address -g
 #Sources
 SRC_FILES		=	pipex\
 					piper\
@@ -32,7 +32,7 @@ ${NAME}:	${SRCS} ${LIBFT}
 			@ echo "${GREEN}pipex compiled!${NRM_COLOR}"
 
 ${LIBFT}:	
-			@ make -C ${LIBFT_FOL} re all bonus extra --no-print-directory --silent
+			@ make -C ${LIBFT_FOL} re --no-print-directory --silent
 			@ echo "${GREEN}Libft compiled :))${NRM_COLOR}"
 
 clean:
