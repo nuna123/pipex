@@ -86,10 +86,8 @@ void	pipe_the_stuff(t_prog *prog)
 void	read_input(char *del, int out_fd)
 {
 	char	*line;
-	int		done;
 
-	done = 0;
-	ft_printf("heredoc>");
+	ft_printf("heredoc> ");
 	line = get_next_line(STDIN_FILENO);
 	while (line)
 	{
@@ -101,8 +99,6 @@ void	read_input(char *del, int out_fd)
 		}
 		write(out_fd, line, ft_strlen(line));
 		free(line);
-		if (done)
-			break ;
 		ft_printf("heredoc> ");
 		line = get_next_line(STDIN_FILENO);
 	}
