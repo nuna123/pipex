@@ -81,20 +81,25 @@ static void	gfc_extander(char **split_path, char **splot)
 	}
 }
 
-char	**get_full_cmd(char *cmd, char **env)
+char	**get_full_cmd(t_prog *prog, int i)
 {
 	char	**splot;
 	char	*path;
 	char	**split_path;
 
-	splot = split_command(cmd);
+	splot = split_command(prog->cmds[i]);
 	if (ft_strchr(splot[0], '/'))
 		return (splot);
-	while (*env)
+	path = getenv("PATH");
+	if (!path)
 	{
-		if (ft_strnstr(*env, "PATH", 5))
-			path = *env + 5;
-		env++;
+		ft_putstr_fd(PROG_NAME, STDERR_FILENO);
+		ft_putstr_fd(splot[0], STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(strerror(2), STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
+		free_arr((void **)splot);
+		exit_prog(prog, 127);
 	}
 	split_path = ft_split(path, ':');
 	gfc_extander(split_path, splot);
@@ -108,9 +113,9 @@ int	main(int argc, char *argv[], char *env[])
 	char	**fullname;
 
 	if (argc > 1)
-		fullname = get_full_cmd(argv[1], env);
+		fullname = get_full_cmd(argv[1]);
 	else
-		fullname = get_full_cmd("ls", env);
+		fullname = get_full_cmd("ls");
 	ft_printf("FULLNAME: \n");
 	for (int i = 0;fullname[i]; i++)
 	{

@@ -15,15 +15,17 @@
 static void	forker(int pipees[2], int file_fds[2],
 				char **cmds[2], t_prog *prog)
 {
-	close (pipees[0]);
 	dup2(file_fds[0], STDIN_FILENO);
 	dup2(pipees[1], STDOUT_FILENO);
-	close (file_fds[0]);
-	close (file_fds[1]);
-	close (pipees[1]);
+	close_fds((int []){pipees[0], pipees[1],
+		file_fds[0], file_fds[1], -1});
 	execve(cmds[0][0], cmds[0], prog->env);
 	release_cmds(cmds);
-	exit_prog(prog, 127);
+	if (errno == 2)
+		errno = 127;
+	else if (errno == 13)
+		errno = 126;
+	exit_prog(prog, errno);
 }
 
 static void	forker2(int pipees[2], int file_fds[2],
@@ -31,12 +33,10 @@ static void	forker2(int pipees[2], int file_fds[2],
 {
 	char	*l;
 
-	close (pipees[1]);
 	dup2(pipees[0], STDIN_FILENO);
 	dup2(file_fds[1], STDOUT_FILENO);
-	close (file_fds[0]);
-	close (file_fds[1]);
-	close (pipees[0]);
+	close_fds((int []){pipees[0], pipees[1],
+		file_fds[0], file_fds[1], -1});
 	if (cmds[1])
 		execve(cmds[1][0], cmds[1], prog->env);
 	else
@@ -44,15 +44,18 @@ static void	forker2(int pipees[2], int file_fds[2],
 		l = get_next_line(STDIN_FILENO);
 		while (l)
 		{
-			write(STDOUT_FILENO, l, ft_strlen(l));
-			free(l);
+			free((write(STDOUT_FILENO, l, ft_strlen(l)), l));
 			l = get_next_line(STDIN_FILENO);
 		}
 		release_cmds(cmds);
 		exit_prog(prog, 0);
 	}
 	release_cmds(cmds);
-	exit_prog(prog, 127);
+	if (errno == 2)
+		errno = 127;
+	else if (errno == 13)
+		errno = 126;
+	exit_prog(prog, errno);
 }
 
 static int	wait_for_child(char **cmd, pid_t child)
@@ -60,8 +63,26 @@ static int	wait_for_child(char **cmd, pid_t child)
 	int		stat;
 
 	waitpid(child, &stat, 0);
-	if (WEXITSTATUS(stat) == 127 && cmd)
-		ft_printf("pipex: %s: %s\n", cmd[0], "command not found");
+	if (WEXITSTATUS(stat) == 126 && cmd)
+	{
+		ft_putstr_fd(PROG_NAME, STDERR_FILENO);
+		ft_putstr_fd(cmd[0], STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(strerror(13), STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
+	}
+	else if (WEXITSTATUS(stat) == 127 && cmd)
+	{
+		ft_putstr_fd(PROG_NAME, STDERR_FILENO);
+		ft_putstr_fd(cmd[0], STDERR_FILENO);
+		ft_putstr_fd(": Command not found\n", STDERR_FILENO);
+	}
+	else if (WEXITSTATUS(stat) != 0 && cmd)
+	{
+		ft_putstr_fd(PROG_NAME, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		perror(cmd[0]);
+	}
 	return (WEXITSTATUS(stat));
 }
 

@@ -34,6 +34,8 @@
 # define CYN  "\x1B[36m"
 # define WHT  "\x1B[37m"
 
+# define PROG_NAME "pipex: "
+
 typedef struct s_prog
 {
 	char	*infile_path;
@@ -52,7 +54,7 @@ typedef struct s_prog
 }	t_prog;
 
 // GET_FULL_NAME
-char		**get_full_cmd(char *cmd, char **env);
+char		**get_full_cmd(t_prog *prog, int i);
 
 //PIPER
 int			piper(char **cmds[2], t_prog *prog,

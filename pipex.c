@@ -67,9 +67,9 @@ void	pipe_the_stuff(t_prog *prog)
 	cmds[1] = NULL;
 	while (i < prog->cmd_num)
 	{
-		cmds[0] = get_full_cmd(prog->cmds[i], prog->env);
+		cmds[0] = get_full_cmd(prog, i);
 		if (i + 1 < prog->cmd_num)
-			cmds[1] = get_full_cmd(prog->cmds[i + 1], prog->env);
+			cmds[1] = get_full_cmd(prog, i + 1);
 		file_fds[0] = pipees[0];
 		if (i == 0 && prog->infile_fd != -1)
 			file_fds[0] = prog->infile_fd;
