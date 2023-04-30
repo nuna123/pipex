@@ -57,6 +57,7 @@ static void	get_outfile(int *argc, char **argv[], t_prog *prog)
 		return ;
 	if (ft_strncmp((*argv)[(*argc) - 2], ">", 1) == 0)
 	{
+		prog->outfile_fd = -1;
 		prog->outfile_path = (*argv)[*argc - 1];
 		if (ft_strncmp((*argv)[*argc - 2], ">", 2) == 0)
 			prog->outfile_permissions = (O_CREAT | O_WRONLY | O_TRUNC);
@@ -127,5 +128,7 @@ t_prog	*prog_creation(int argc, char *argv[], char *env[])
 	get_infile(&argc, &argv, prog);
 	get_outfile(&argc, &argv, prog);
 	get_cmds(argv, prog);
+
+
 	return (prog);
 }

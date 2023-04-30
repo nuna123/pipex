@@ -57,8 +57,8 @@ typedef struct s_prog
 char		**get_full_cmd(t_prog *prog, int i);
 
 //PIPER
-int			piper(char **cmds[2], t_prog *prog,
-				int file_fds[2]);
+int		piper(char **cmd, char *env[],
+		int in_fd, int out_fd);
 
 //PIPEX_UTILS
 void		free_arr(void **arr);
