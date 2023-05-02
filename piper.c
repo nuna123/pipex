@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-int	piper(char **cmd, char *env[],
+int	forker(char **cmd, char *env[],
 		int in_fd, int out_fd)
 {
 	pid_t	child;
@@ -34,4 +34,14 @@ int	piper(char **cmd, char *env[],
 	else
 		waitpid (child, &stat, 0);
 	return (WEXITSTATUS(stat));
+}
+
+int	piper(char **cmd, char *env[],
+		int in_fd, int out_fd)
+{
+	if (ft_strncmp(cmd[0], "echo", 5) == 0)
+		return (handle_echo(cmd, out_fd));
+	if (ft_strncmp(cmd[0], "pwd", 4) == 0)
+		return (print_pwd(out_fd));
+	return (forker(cmd, env, in_fd, out_fd));
 }

@@ -133,7 +133,6 @@ int	main(int argc, char *argv[], char *env[])
 	if (argc == 2)
 	{
 		char *s = ft_strjoin ("pipex ", argv[1]);
-
 		argv = ft_split (s, ' ');
 		free (s);
 		argc = ft_arrlen((void **)argv);
@@ -146,6 +145,7 @@ int	main(int argc, char *argv[], char *env[])
 		free(argv);
 		exit_prog (prog, stat);
 	}
+
 	prog = prog_creation(argc, argv, env);
 	if (prog->heredoc_deli)
 		here_doc(prog);

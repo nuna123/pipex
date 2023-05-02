@@ -67,6 +67,10 @@ void		close_fds(int arr[]);
 void		cpy_arr(char **dest, char **src);
 void		exit_prog(t_prog *prog, int exitstat);
 
+//COMMANDS
+int			handle_echo(char **command, int out_fd);
+int			print_pwd(int out_fd);
+
 //PROG_CREATION
 // static t_prog	*init_prog(char *envp[]);
 // static void	get_infile(int argc, char *argv[], t_prog *prog);
