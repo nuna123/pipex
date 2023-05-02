@@ -146,6 +146,18 @@ int	main(int argc, char *argv[], char *env[])
 		exit_prog (prog, stat);
 	}
 
+/* 	int	i;
+
+	i = 0;
+	while (argv[++i])
+	{
+		if (ft_strnstr (argv[i], "&&", ft_strlen(argv[i])))
+
+	}
+	
+
+ */
+
 	prog = prog_creation(argc, argv, env);
 	if (prog->heredoc_deli)
 		here_doc(prog);
