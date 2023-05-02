@@ -130,6 +130,22 @@ int	main(int argc, char *argv[], char *env[])
 
 	if (argc == 1)
 		exit_prog(NULL, (printf("WRONG NUM OF ARGUMENTS!\n"), 1));
+	if (argc == 2)
+	{
+		char *s = ft_strjoin ("pipex ", argv[1]);
+
+		argv = ft_split (s, ' ');
+		free (s);
+		argc = ft_arrlen((void **)argv);
+		prog = prog_creation(argc, argv, env);
+		if (prog->heredoc_deli)
+			here_doc(prog);
+		int stat = pipe_the_stuff (prog);
+		for (int i = 0;argv[i]; i++)
+			free(argv[i]);
+		free(argv);
+		exit_prog (prog, stat);
+	}
 	prog = prog_creation(argc, argv, env);
 	if (prog->heredoc_deli)
 		here_doc(prog);
