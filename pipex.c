@@ -41,46 +41,54 @@ void	printeeer(char **cmd1, char **cmd2, char *infile_path, char *outfile_path)
 
  */
 
-int	figure_fd1(t_prog *prog, int i, int pipees[2])
+void	get_outfile_fd(int i, t_prog *prog, int file_fds[2], int pipees[2])
 {
-	int	res;
-
-	res = -1;
-	if (i != prog->cmd_num - 1 && i != prog->cmd_num - 2)
-		res = pipees[1];
-	else if (prog->outfile_path)
-		res = open(prog->outfile_path, prog->outfile_permissions, 0666);
+	if (i == prog->cmd_num - 1)
+	{
+		file_fds[1] = prog->outfile_fd;
+		if (prog->outfile_fd == -1)
+			file_fds[1] = open (prog->outfile_path,
+					prog->outfile_permissions, 0666);
+		if (file_fds[1] == -1)
+		{
+			perror(prog->outfile_path);
+			exit_prog (prog, errno);
+		}
+	}
 	else
-		res = prog->outfile_fd;
-	return (res);
+	{
+		pipe (pipees);
+		file_fds[1] = pipees[1];
+	}
 }
 
-void	pipe_the_stuff(t_prog *prog)
+int	pipe_the_stuff(t_prog *prog)
 {
-	int		file_fds[2];
-	char	**cmds[2];
-	int		pipees[2];
 	int		i;
 	int		stat;
+	int		file_fds[2];
+	int		pipees[2];
+	char	**cmd;
 
-	i = 0;
-	cmds[1] = NULL;
-	while (i < prog->cmd_num)
+	i = -1;
+	file_fds[0] = prog->infile_fd;
+	if (prog->infile_fd == -1)
+		file_fds[0] = open (prog->infile_path, O_RDONLY);
+	if (file_fds[0] == -1)
 	{
-		cmds[0] = get_full_cmd(prog, i);
-		if (i + 1 < prog->cmd_num)
-			cmds[1] = get_full_cmd(prog, i + 1);
-		file_fds[0] = pipees[0];
-		if (i == 0 && prog->infile_fd != -1)
-			file_fds[0] = prog->infile_fd;
-		else if (i == 0)
-			file_fds[0] = open(prog->infile_path, O_RDONLY);
-		pipe(pipees);
-		file_fds[1] = figure_fd1(prog, i, pipees);
-		stat = piper(cmds, prog, file_fds);
-		i += 2;
+		perror(prog->infile_path);
+		exit_prog (prog, errno);
 	}
-	exit (stat);
+	while (++i < prog->cmd_num)
+	{
+		get_outfile_fd(i, prog, file_fds, pipees);
+		cmd = get_full_cmd (prog, i);
+		stat = piper (cmd, prog->env, file_fds[0], file_fds[1]);
+		free_arr ((void **) cmd);
+		close_fds((int []){file_fds[0], file_fds[1], -1});
+		file_fds[0] = pipees[0];
+	}
+	return (stat);
 }
 
 void	read_input(char *del, int out_fd)
@@ -114,20 +122,7 @@ void	here_doc(t_prog *prog)
 	read_input(prog->heredoc_deli, pipees[1]);
 	close (prog->infile_fd);
 	prog->infile_fd = pipees[0];
-	pipe_the_stuff(prog);
 }
-
-/* void pipex (int argc, char *argv[], char *env[])
-{
-	t_prog	*prog;
-
-	// if (argc == 1)
-	// 	exit_prog(NULL, (printf("WRONG NUM OF ARGUMENTS!\n"), 1));
-	prog = prog_creation(argc, argv, env);
-	if (prog->heredoc_deli)
-		here_doc(prog);
-	pipe_the_stuff(prog);
-} */
 
 int	main(int argc, char *argv[], char *env[])
 {
@@ -138,9 +133,10 @@ int	main(int argc, char *argv[], char *env[])
 	prog = prog_creation(argc, argv, env);
 	if (prog->heredoc_deli)
 		here_doc(prog);
-	pipe_the_stuff(prog);
+	exit_prog (prog, pipe_the_stuff(prog));
 	return (0);
 }
+
 /*
 	printf("-------------------\nARGC: %i\n", argc);
 	ft_printf("\nARGV:");
