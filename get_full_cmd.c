@@ -70,7 +70,6 @@ static void	gfc_extander(char **split_path, char **splot)
 	{
 		temp = ft_strjoin(split_path[i], "/");
 		path = ft_strjoin(temp, splot[0]);
-		
 		free(temp);
 		if (access(path, 0) == 0)
 		{

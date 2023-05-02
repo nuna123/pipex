@@ -133,10 +133,10 @@ int	main(int argc, char *argv[], char *env[])
 	prog = prog_creation(argc, argv, env);
 	if (prog->heredoc_deli)
 		here_doc(prog);
-	
 	exit_prog (prog, pipe_the_stuff(prog));
 	return (0);
 }
+
 /*
 	printf("-------------------\nARGC: %i\n", argc);
 	ft_printf("\nARGV:");

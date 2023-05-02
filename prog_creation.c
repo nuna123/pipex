@@ -95,28 +95,6 @@ static void	get_cmds(char *argv[], t_prog *prog)
 	}
 	prog->cmd_num = ft_arrlen((void **) prog->cmds);
 }
-/* 
-static void	get_cmds(char *argv[], t_prog *prog)
-{
-	int	i;
-	int	j;
-
-	i = 1;
-	while (argv[i])
-	{
-		if (ft_strncmp(argv[i], "|", 2) == 0)
-		{
-			j = i - 1;
-			while (argv[++j])
-				argv[j] = argv[j + 1];
-		}
-		else
-			i++;
-	}
-	prog->cmds = argv;
-	prog->cmd_num = i;
-}
- */
 
 t_prog	*prog_creation(int argc, char *argv[], char *env[])
 {
@@ -128,7 +106,5 @@ t_prog	*prog_creation(int argc, char *argv[], char *env[])
 	get_infile(&argc, &argv, prog);
 	get_outfile(&argc, &argv, prog);
 	get_cmds(argv, prog);
-
-
 	return (prog);
 }
