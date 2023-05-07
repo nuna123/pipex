@@ -98,28 +98,6 @@ static void	get_cmds(char *argv[], t_prog *prog)
 	prog->cmd_num = ft_arrlen((void **) prog->cmds);
 }
 
-char **resplit (char *argv[])
-{
-	int		i;
-	char	*temp;
-	char	*cmds;
-
-	//ADDING ALL ARGV TO ONE INPUT LINE
-	i = -1;
-	cmds = ft_strdup("");
-	while (argv[++i])
-	{
-		temp = ft_strjoin(cmds, argv[i]);
-		cmds = (free (cmds), temp);
-		if (argv[i + 1])
-		{
-			temp = ft_strjoin(cmds, " ");
-			cmds = (free (cmds), temp);
-		}
-	}
-}
-
-
 t_prog	*prog_creation(int argc, char *argv[], char *env[])
 {
 	t_prog	*prog;

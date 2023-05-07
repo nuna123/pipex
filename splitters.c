@@ -1,95 +1,149 @@
 
 #include "pipex.h"
 
-char	*improved_trim(char *str, char *charset)
+//ADDING ALL ARGV TO ONE INPUT LINE
+char *stringize(char *argv[])
 {
 	char	*temp;
-
-	temp = ft_strtrim(str, charset);
-	free (str);
-	return (temp);
-}
-
-static int	split_extander(char **split)
-{
-	int	j;
-
-	j = 0;
-	while (++j && split[j])
-	{
-		split[0] = str_append (split[0], split[j], " ");
-		if (ft_strchr(split[j], '\'') || !split[j + 1])
-		{
-			split[j] = (free (split[j]), NULL);
-			return (j);
-		}
-		split[j] = (free (split[j]), NULL);
-	}
-	return (j);
-}
-
-char	**split_command(char *str, char tosplit)
-{
-	char	**split;
+	char	*cmds;
 	int		i;
-	int		j;
 
-	split = ft_split(str, ' ');
 	i = -1;
-	while (split[++i])
+	cmds = ft_strdup("");
+	while (argv[++i])
 	{
-		if (ft_strchr(split[i], '\''))
+		temp = ft_strjoin(cmds, argv[i]);
+		cmds = (free (cmds), temp);
+		if (argv[i + 1])
 		{
-			j = split_extander(&split[i]);
-			split[i] = improved_trim(split[i], "\'");
-			cpy_arr(&(split[i + 1]), &(split[i + j + 1]));
+			temp = ft_strjoin(cmds, " ");
+			cmds = (free (cmds), temp);
 		}
 	}
-	return (split);
-}
-/* char	*improved_trim(char *str, char *charset)
-{
-	char	*temp;
-
-	temp = ft_strtrim(str, charset);
-	free (str);
-	return (temp);
+	return (cmds);
 }
 
-static int	split_extander(char **split)
+char *expand_arg(char *str, int counter)
 {
-	int	j;
+	char	*argname;
+	char	*arg;
+	int		argname_len;
+	char	*newstr;
 
-	j = 0;
-	while (++j && split[j])
+	argname_len = 0;
+	while (!ft_strchr("\'\" ", str[counter + argname_len + 1]))
+		argname_len++;
+	printf ("argname len: %i\n", argname_len);
+	argname = ft_substr (str, counter + 1, argname_len);
+	arg = getenv(argname);
+
+	printf("arg: {%s}\n", arg);
+	printf("one\n");
+	newstr = ft_calloc((ft_strlen(str) - argname_len) + ft_strlen(arg) ,sizeof(char));
+	printf("two\n");
+
+	ft_strlcpy(newstr, str, counter);
+	printf("threee\n");
+
+	ft_strlcpy(ft_strchr(newstr, 0), arg, ft_strlen(arg) + 1);
+		printf("four\n");
+
+	ft_strlcpy(ft_strchr(newstr, 0), str + counter + argname_len, ft_strlen(str) + 1);
+		printf("five\n");
+
+printf("newstr: {%s}\n", newstr);
+
+
+	printf("len: %i ; argname: {%s}\n",argname_len, argname);
+	free(argname);
+	return (NULL);
+}
+
+void	split_extand (int *is_quotes, char *str, int *counter)
+{
+	if ((str[*counter] == '\"' || str[*counter] == '\'')
+			&& !*is_quotes)
 	{
-		split[0] = str_append (split[0], split[j], " ");
-		if (ft_strchr(split[j], '\'') || !split[j + 1])
-		{
-			split[j] = (free (split[j]), NULL);
-			return (j);
-		}
-		split[j] = (free (split[j]), NULL);
+		ft_memmove(&str[*counter], &str[*counter + 1], ft_strlen(&(str[*counter])));
+		*is_quotes = 2;
+		if (str[*counter] == '\'')
+			*is_quotes = 1;
+		*counter -= 1;
 	}
-	return (j);
+	else if ((str[*counter] == '\"' && *is_quotes == 2)
+		|| (str[*counter] == '\'' && *is_quotes == 1))
+	{
+		ft_memmove(&str[*counter], &str[*counter + 1], ft_strlen(&(str[*counter + 1])) + 1);
+		*is_quotes = 0;
+		*counter -= 1;
+	}
 }
 
-char	**split_command(char *cmd)
+char **split_string(char *str)
 {
-	char	**split;
-	int		i;
-	int		j;
+	char	**ret;
+	int		counter;
+	int		is_quotes; //0 == NO, 1 == SINGLE QUOTES, 2 == DOUBLE
 
-	split = ft_split(cmd, ' ');
-	i = -1;
-	while (split[++i])
+	is_quotes = 0;
+	ret = ft_calloc(1, sizeof (char *));
+	counter = -1;
+	while (str[++counter])
 	{
-		if (ft_strchr(split[i], '\''))
+		printf ("char: %c ; i: %i\n", str[counter], counter);
+		if (str[counter] == '$' && is_quotes != 1)
+			expand_arg(str, counter);
+		if (str[counter] == ' ' && !is_quotes)
 		{
-			j = split_extander(&split[i]);
-			split[i] = improved_trim(split[i], "\'");
-			cpy_arr(&(split[i + 1]), &(split[i + j + 1]));
+			ret = ft_arrappend(ret, ft_substr(str, 0, counter));
+			str = &(str[counter]) + 1;
+			counter = -1;
+			is_quotes = 0;
 		}
+		else
+			split_extand(&is_quotes, str, &counter);
 	}
-	return (split);
-} */
+	if (*str)
+		ret = ft_arrappend(ret, ft_strdup(str));
+	return (ret);
+}
+/* 
+
+char **resplit (char *argv[])
+{
+	char	*cmds;
+	char	**ret;
+	int		counter;
+
+	int		is_quotes; //0 == NO, 1 == SINGLE QUTES, 2 == DOUBLE 
+	is_quotes = 0;
+
+	cmds = stringize(argv);
+	printf("ONE\n");
+
+	ret = split_string (cmds);
+	printf("TWO\n");
+
+	for (int i = 0; ret[i]; i++)
+		printf("{%s}\n", ret[i]);
+
+	free(cmds);
+	return (NULL);
+	
+}
+ */
+int main (int argc, char **argv)
+{
+
+	(void)argc;
+	(void)argv;
+
+	char **s = split_string ("HE\"AG\"LLO");
+	for (;*s;s++)
+		printf ("{%s}\n", *s);
+
+	// printf ("\n{%s}\n", getenv("ARG"));
+
+
+	return 0;
+}
