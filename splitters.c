@@ -127,27 +127,3 @@ char	**resplit_argv(int argc, char *argv[])
 	free (str);
 	return (ret);
 }
-
-/* 
-int main (int argc, char **argv)
-{
-
-	char *str;
-
-	if (argc > 1)
-		str = stringize (argv + 1);
-	else
-		str = ft_strdup("H E \\ \\\' O");
-
-	printf("STR: \n\t[%s]\n", str);
-	char **s = split_string (str);
-	free (str);
-	for (int i = 0;s[i];i++)
-	{
-		printf ("{%s}\n", s[i]);
-		free (s[i]);
-	}
-	free (s);
-	return 0;
-}
- */
