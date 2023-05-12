@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
-
+/* 
 char	*improved_trim(char *str, char *charset)
 {
 	char	*temp;
@@ -58,7 +58,7 @@ char	**split_command(char *cmd)
 	}
 	return (split);
 }
-
+ */
 static void	gfc_extander(char **split_path, char **splot)
 {
 	int		i;
@@ -88,7 +88,7 @@ char	**get_full_cmd(t_prog *prog, int i)
 	char	*path;
 	char	**split_path;
 
-	splot = split_command(prog->cmds[i]);
+	splot = prog->cmds[i];
 	if (ft_strchr(splot[0], '/')
 		|| !ft_strncmp(splot[0], "echo", 5)
 		|| !ft_strncmp(splot[0], "pwd", 4))

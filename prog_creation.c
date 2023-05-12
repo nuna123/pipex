@@ -12,6 +12,46 @@
 
 #include "pipex.h"
 
+void	**ft_arrappend_void(void **arr, void *to_append)
+{
+	void	**ret;
+	int		i;
+
+	i = 0;
+	ret = malloc (sizeof (void *) * (ft_arrlen(arr) + 2));
+	while (arr && arr[i])
+	{
+		ret[i] = arr[i];
+		i++;
+	}
+	ret [i] = to_append;
+	ret [i + 1] = NULL;
+	free (arr);
+	arr = ret;
+	return (ret);
+}
+
+char	**ft_arrappend(char **arr, char *to_append)
+{
+	char	**ret;
+	int		i;
+
+	i = 0;
+	ret = malloc (sizeof (char *) * (ft_arrlen((void **) arr) + 2));
+	while (arr && arr[i])
+	{
+		ret[i] = arr[i];
+		i++;
+	}
+		
+	
+	ret [i] = to_append;
+	ret [i + 1] = NULL;
+	free (arr);
+	arr = ret;
+	return (ret);
+}
+
 static t_prog	*init_prog(char *envp[])
 {
 	t_prog	*prog;
@@ -72,28 +112,30 @@ static void	get_outfile(int *argc, char **argv[], t_prog *prog)
 static void	get_cmds(char *argv[], t_prog *prog)
 {
 	int		i;
-	char	*temp;
-	char	*cmds;
+	char	**cmds;
+
 
 	i = -1;
-	cmds = ft_strdup("");
-	while (argv[++i])
+	cmds = NULL;
+	while (1)
 	{
-		temp = ft_strjoin(cmds, argv[i]);
-		cmds = (free (cmds), temp);
-		if (argv[i + 1])
+		i++;
+		if (!argv[i])
 		{
-			temp = ft_strjoin(cmds, " ");
-			cmds = (free (cmds), temp);
+			if (cmds)
+				prog->cmds = (char ***) ft_arrappend_void((void **) prog->cmds, (void *) cmds);
+			return;
 		}
-	}
-	prog->cmds = ft_split(cmds, '|');
-	free(cmds);
-	i = -1;
-	while (prog->cmds[++i])
-	{
-		temp = ft_strtrim(prog->cmds[i], " ");
-		prog->cmds[i] = (free (prog->cmds[i]), temp);
+		if (ft_strncmp(argv[i], "|", 2) == 0)
+		{
+			if (cmds)
+			{
+				prog->cmds = (char ***) ft_arrappend_void((void **) prog->cmds, (void *) cmds);
+				cmds = NULL;
+			}
+		}
+		else
+			cmds = ft_arrappend(cmds, ft_strdup(argv[i]));
 	}
 	prog->cmd_num = ft_arrlen((void **) prog->cmds);
 }
@@ -109,4 +151,25 @@ t_prog	*prog_creation(int argc, char *argv[], char *env[])
 	get_outfile(&argc, &argv, prog);
 	get_cmds(argv, prog);
 	return (prog);
+}
+
+
+int main(int argc, char *argv[], char *env[])
+{
+	argv = (char *[]) {"pipex", "echo", "echo1", "echo2", "echo3", "|","cat", "|","cat1", "cat2", NULL};
+	argc = ft_arrlen((void **) argv);
+
+	printf("checkpnt 1\n");
+	t_prog	*prog = prog_creation(argc, argv, env);
+	printf("\n\n[%lu]\n", ft_arrlen((void **) prog->cmds));
+	for (int i = 0; prog->cmds[i];i++)
+	{
+		for (int j = 0; prog->cmds[i][j];j++)
+		{
+			printf ("{%s}", prog->cmds[i][j]);
+		}
+		printf("\n");
+	}
+	exit_prog(prog, 0);
+	return 0;
 }

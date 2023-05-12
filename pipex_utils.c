@@ -59,9 +59,26 @@ void	cpy_arr(char **dest, char **src)
 
 void	exit_prog(t_prog *prog, int exitstat)
 {
+	int	i;
+
+	i = 0;
 	if (prog)
 	{
-		free_arr((void **) prog->cmds);
+		if (prog->cmds)
+		{
+/* 			for (int i = 0; prog->cmds[i];i++)
+			{
+				for (int j = 0; prog->cmds[i][j];j++)
+				{
+					free(prog->cmds[i][j]);
+				}
+			free(prog->cmds[i]);
+			} */
+			while (prog->cmds[i])
+				free_arr((void **) prog->cmds[i++]);
+			free (prog->cmds);
+		}
+
 		free (prog);
 	}
 	exit (exitstat);

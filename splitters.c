@@ -13,7 +13,7 @@
 #include "pipex.h"
 
 //ADDING ALL ARGV TO ONE INPUT LINE
-char	*stringize(char *argv[])
+static char	*stringize(char *argv[])
 {
 	char	*temp;
 	char	*cmds;
@@ -34,7 +34,7 @@ char	*stringize(char *argv[])
 	return (cmds);
 }
 
-char	*expand_arg(char *str, int counter)
+static char	*expand_arg(char *str, int counter)
 {
 	char	*argname;
 	char	*arg;
@@ -59,7 +59,7 @@ char	*expand_arg(char *str, int counter)
 	return (newstr);
 }
 
-void	split_extand(int *is_quotes, char *str, int *counter)
+static void	split_extand(int *is_quotes, char *str, int *counter)
 {
 	if ((str[*counter] == '\"' || str[*counter] == '\'')
 		&& !*is_quotes)
@@ -87,7 +87,7 @@ void	split_extand(int *is_quotes, char *str, int *counter)
 }
 
 //IS_QUOTES: 0 == NO, 1 == SINGLE QUOTES, 2 == DOUBLE
-char	**split_string(char *str)
+static char	**split_string(char *str)
 {
 	char	**ret;
 	int		counter;
@@ -122,8 +122,11 @@ char	**resplit_argv(int argc, char *argv[])
 
 	if (argc < 2)
 		return (argv);
-	str = stringize (argv + 1);
+	str = stringize (argv);
+	printf ("str: {%s}\n", str);
 	ret = split_string (str);
 	free (str);
 	return (ret);
 }
+
+

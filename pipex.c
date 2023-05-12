@@ -123,14 +123,23 @@ void	here_doc(t_prog *prog)
 	close (prog->infile_fd);
 	prog->infile_fd = pipees[0];
 }
-
+/* 
 int	main(int argc, char *argv[], char *env[])
 {
 	t_prog	*prog;
 
 	if (argc == 1)
 		exit_prog(NULL, (printf("WRONG NUM OF ARGUMENTS!\n"), 1));
-	if (argc == 2)
+	prog = prog_creation(argc, argv, env);
+	if (prog->heredoc_deli)
+		here_doc(prog);
+	exit_prog (prog, pipe_the_stuff(prog));
+	return (0);
+}
+ */
+/*
+	// TO RECIEVE ARGS AS STRING IN COMMAND LINE INSTEAD OF ONE LONG STRING
+if (argc == 2)
 	{
 		char *s = ft_strjoin ("pipex ", argv[1]);
 		argv = ft_split (s, ' ');
@@ -144,48 +153,5 @@ int	main(int argc, char *argv[], char *env[])
 			free(argv[i]);
 		free(argv);
 		exit_prog (prog, stat);
-	}
-
-/* 	int	i;
-
-	i = 0;
-	while (argv[++i])
-	{
-		if (ft_strnstr (argv[i], "&&", ft_strlen(argv[i])))
-
-	}
-	
-
- */
-
-	prog = prog_creation(argc, argv, env);
-	if (prog->heredoc_deli)
-		here_doc(prog);
-	exit_prog (prog, pipe_the_stuff(prog));
-	return (0);
-}
-
-/*
-	printf("-------------------\nARGC: %i\n", argc);
-	ft_printf("\nARGV:");
-	int i = 0;
-	 while (argv[i])
-	 	printf("\t%s\n", argv[i++]);
-	printf("-------------------\n");
-*/
-
-/*
-	printf("cmds num: %i\n", prog->cmd_num);
-	ft_printf("\ncmds:");
-	i = 0;
-	 while (prog->cmds[i])
-	 	printf("\t%s\n", prog->cmds[i++]);
-*/
-
-/*
-	else if (argc == 2)
-	{
-		argv = ft_split (argv[1], ' ');
-		argc = ft_arrlen((void **) argv);
 	}
 */
