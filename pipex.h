@@ -54,7 +54,7 @@ typedef struct s_prog
 }	t_prog;
 
 // GET_FULL_NAME
-char		**get_full_cmd(t_prog *prog, int i);
+char		*get_full_cmd(t_prog *prog, char *cmd);
 
 //PIPER
 int			piper(char **cmd, char *env[],

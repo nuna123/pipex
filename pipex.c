@@ -72,6 +72,7 @@ int	pipe_the_stuff(t_prog *prog)
 
 	i = -1;
 	file_fds[0] = prog->infile_fd;
+	
 	if (prog->infile_fd == -1)
 		file_fds[0] = open (prog->infile_path, O_RDONLY);
 	if (file_fds[0] == -1)
@@ -82,9 +83,8 @@ int	pipe_the_stuff(t_prog *prog)
 	while (++i < prog->cmd_num)
 	{
 		get_outfile_fd(i, prog, file_fds, pipees);
-		cmd = get_full_cmd (prog, i);
+		cmd = prog->cmds[i];
 		stat = piper (cmd, prog->env, file_fds[0], file_fds[1]);
-		free_arr ((void **) cmd);
 		close_fds((int []){file_fds[0], file_fds[1], -1});
 		file_fds[0] = pipees[0];
 	}
@@ -123,7 +123,7 @@ void	here_doc(t_prog *prog)
 	close (prog->infile_fd);
 	prog->infile_fd = pipees[0];
 }
-/* 
+
 int	main(int argc, char *argv[], char *env[])
 {
 	t_prog	*prog;
@@ -136,7 +136,7 @@ int	main(int argc, char *argv[], char *env[])
 	exit_prog (prog, pipe_the_stuff(prog));
 	return (0);
 }
- */
+
 /*
 	// TO RECIEVE ARGS AS STRING IN COMMAND LINE INSTEAD OF ONE LONG STRING
 if (argc == 2)

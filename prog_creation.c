@@ -12,46 +12,6 @@
 
 #include "pipex.h"
 
-void	**ft_arrappend_void(void **arr, void *to_append)
-{
-	void	**ret;
-	int		i;
-
-	i = 0;
-	ret = malloc (sizeof (void *) * (ft_arrlen(arr) + 2));
-	while (arr && arr[i])
-	{
-		ret[i] = arr[i];
-		i++;
-	}
-	ret [i] = to_append;
-	ret [i + 1] = NULL;
-	free (arr);
-	arr = ret;
-	return (ret);
-}
-
-char	**ft_arrappend(char **arr, char *to_append)
-{
-	char	**ret;
-	int		i;
-
-	i = 0;
-	ret = malloc (sizeof (char *) * (ft_arrlen((void **) arr) + 2));
-	while (arr && arr[i])
-	{
-		ret[i] = arr[i];
-		i++;
-	}
-		
-	
-	ret [i] = to_append;
-	ret [i + 1] = NULL;
-	free (arr);
-	arr = ret;
-	return (ret);
-}
-
 static t_prog	*init_prog(char *envp[])
 {
 	t_prog	*prog;
@@ -113,6 +73,7 @@ static void	get_cmds(char *argv[], t_prog *prog)
 {
 	int		i;
 	char	**cmds;
+	char	*toadd;
 
 
 	i = -1;
@@ -124,6 +85,7 @@ static void	get_cmds(char *argv[], t_prog *prog)
 		{
 			if (cmds)
 				prog->cmds = (char ***) ft_arrappend_void((void **) prog->cmds, (void *) cmds);
+			prog->cmd_num = ft_arrlen((void **) prog->cmds);
 			return;
 		}
 		if (ft_strncmp(argv[i], "|", 2) == 0)
@@ -135,9 +97,14 @@ static void	get_cmds(char *argv[], t_prog *prog)
 			}
 		}
 		else
-			cmds = ft_arrappend(cmds, ft_strdup(argv[i]));
+		{
+			if (!cmds)
+				toadd = get_full_cmd(prog, argv[i]);
+			else
+				toadd = ft_strdup(argv[i]);
+			cmds = ft_arrappend(cmds, toadd);
+		}
 	}
-	prog->cmd_num = ft_arrlen((void **) prog->cmds);
 }
 
 t_prog	*prog_creation(int argc, char *argv[], char *env[])
@@ -153,7 +120,7 @@ t_prog	*prog_creation(int argc, char *argv[], char *env[])
 	return (prog);
 }
 
-
+/* 
 int main(int argc, char *argv[], char *env[])
 {
 	argv = (char *[]) {"pipex", "echo", "echo1", "echo2", "echo3", "|","cat", "|","cat1", "cat2", NULL};
@@ -172,4 +139,4 @@ int main(int argc, char *argv[], char *env[])
 	}
 	exit_prog(prog, 0);
 	return 0;
-}
+} */

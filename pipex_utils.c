@@ -66,14 +66,6 @@ void	exit_prog(t_prog *prog, int exitstat)
 	{
 		if (prog->cmds)
 		{
-/* 			for (int i = 0; prog->cmds[i];i++)
-			{
-				for (int j = 0; prog->cmds[i][j];j++)
-				{
-					free(prog->cmds[i][j]);
-				}
-			free(prog->cmds[i]);
-			} */
 			while (prog->cmds[i])
 				free_arr((void **) prog->cmds[i++]);
 			free (prog->cmds);
