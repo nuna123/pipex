@@ -73,38 +73,29 @@ static void	get_cmds(char *argv[], t_prog *prog)
 {
 	int		i;
 	char	**cmds;
-	char	*toadd;
-
 
 	i = -1;
 	cmds = NULL;
-	while (1)
+	while (argv[++i])
 	{
-		i++;
-		if (!argv[i])
+		if (ft_strncmp(argv[i], "|", 2) == 0 && cmds)
 		{
-			if (cmds)
-				prog->cmds = (char ***) ft_arrappend_void((void **) prog->cmds, (void *) cmds);
-			prog->cmd_num = ft_arrlen((void **) prog->cmds);
-			return;
-		}
-		if (ft_strncmp(argv[i], "|", 2) == 0)
-		{
-			if (cmds)
-			{
-				prog->cmds = (char ***) ft_arrappend_void((void **) prog->cmds, (void *) cmds);
-				cmds = NULL;
-			}
+			prog->cmds = (char ***) ft_arrappend_void((void **) prog->cmds,
+					(void *) cmds);
+			cmds = NULL;
 		}
 		else
 		{
 			if (!cmds)
-				toadd = get_full_cmd(prog, argv[i]);
+				cmds = ft_arrappend(cmds, get_full_cmd(prog, argv[i]));
 			else
-				toadd = ft_strdup(argv[i]);
-			cmds = ft_arrappend(cmds, toadd);
+				cmds = ft_arrappend(cmds, ft_strdup(argv[i]));
 		}
 	}
+	if (cmds)
+		prog->cmds = (char ***) ft_arrappend_void((void **) prog->cmds,
+				(void *) cmds);
+	prog->cmd_num = ft_arrlen((void **) prog->cmds);
 }
 
 t_prog	*prog_creation(int argc, char *argv[], char *env[])
@@ -119,24 +110,3 @@ t_prog	*prog_creation(int argc, char *argv[], char *env[])
 	get_cmds(argv, prog);
 	return (prog);
 }
-
-/* 
-int main(int argc, char *argv[], char *env[])
-{
-	argv = (char *[]) {"pipex", "echo", "echo1", "echo2", "echo3", "|","cat", "|","cat1", "cat2", NULL};
-	argc = ft_arrlen((void **) argv);
-
-	printf("checkpnt 1\n");
-	t_prog	*prog = prog_creation(argc, argv, env);
-	printf("\n\n[%lu]\n", ft_arrlen((void **) prog->cmds));
-	for (int i = 0; prog->cmds[i];i++)
-	{
-		for (int j = 0; prog->cmds[i][j];j++)
-		{
-			printf ("{%s}", prog->cmds[i][j]);
-		}
-		printf("\n");
-	}
-	exit_prog(prog, 0);
-	return 0;
-} */

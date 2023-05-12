@@ -78,13 +78,4 @@ int			print_pwd(int out_fd);
 // static void	get_cmds(char *argv[], t_prog *prog);
 t_prog		*prog_creation(int argc, char *argv[], char *env[]);
 
-
-// SPLITTERS
-// static char	*stringize(char *argv[]);
-// static char	*expand_arg(char *str, int counter);
-// static void	split_extand(int *is_quotes, char *str, int *counter);
-// static char	**split_string(char *str);
-// char		**resplit_argv(int argc, char *argv[]);
-
-
 #endif

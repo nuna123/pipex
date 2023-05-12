@@ -70,7 +70,6 @@ void	exit_prog(t_prog *prog, int exitstat)
 				free_arr((void **) prog->cmds[i++]);
 			free (prog->cmds);
 		}
-
 		free (prog);
 	}
 	exit (exitstat);

@@ -72,7 +72,6 @@ int	pipe_the_stuff(t_prog *prog)
 
 	i = -1;
 	file_fds[0] = prog->infile_fd;
-	
 	if (prog->infile_fd == -1)
 		file_fds[0] = open (prog->infile_path, O_RDONLY);
 	if (file_fds[0] == -1)
