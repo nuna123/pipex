@@ -12,27 +12,6 @@
 
 #include "pipex.h"
 
-void	free_arr(void **arr)
-{
-	int	i;
-
-	i = -1;
-	while (arr[++i])
-		free(arr[i]);
-	free(arr);
-}
-
-int	release_cmds(char **cmds[2])
-{
-	if (cmds[0])
-		free_arr((void **) cmds[0]);
-	if (cmds[1])
-		free_arr((void **) cmds[1]);
-	cmds[0] = NULL;
-	cmds[1] = NULL;
-	return (1);
-}
-
 //TERMINATE ARR WITH -1
 void	close_fds(int arr[])
 {
@@ -46,17 +25,6 @@ void	close_fds(int arr[])
 	}
 }
 
-void	cpy_arr(char **dest, char **src)
-{
-	while (*src)
-	{
-		*dest = *src;
-		dest++;
-		src++;
-	}
-	*dest = NULL;
-}
-
 void	exit_prog(t_prog *prog, int exitstat)
 {
 	int	i;
@@ -67,10 +35,32 @@ void	exit_prog(t_prog *prog, int exitstat)
 		if (prog->cmds)
 		{
 			while (prog->cmds[i])
-				free_arr((void **) prog->cmds[i++]);
+				ft_arrfree((void **) prog->cmds[i++]);
 			free (prog->cmds);
 		}
 		free (prog);
 	}
 	exit (exitstat);
+}
+
+void	read_input(char *del, int out_fd)
+{
+	char	*line;
+
+	ft_printf("heredoc> ");
+	line = get_next_line(STDIN_FILENO);
+	while (line)
+	{
+		if (ft_strncmp(line, del, ft_strlen(del)) == 0
+			&& line[ft_strlen(del)] == '\n')
+		{
+			free (line);
+			break ;
+		}
+		write(out_fd, line, ft_strlen(line));
+		free(line);
+		ft_printf("heredoc> ");
+		line = get_next_line(STDIN_FILENO);
+	}
+	close(out_fd);
 }

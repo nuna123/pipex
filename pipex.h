@@ -53,19 +53,24 @@ typedef struct s_prog
 	char	**env;
 }	t_prog;
 
-// GET_FULL_NAME
+// GET_FULL_CMD
+// static char	*gfc_extander(char **split_path, char *cmd);
 char		*get_full_cmd(t_prog *prog, char *cmd);
 
 //PIPER
+// int	forker(char **cmd, char *env[], int in_fd, int out_fd);
+
 int			piper(char **cmd, char *env[],
 				int in_fd, int out_fd);
 
+// static void	get_outfile_fd(int i, t_prog *prog,
+//	int file_fds[2], int pipees[2]);
+int			pipe_the_stuff(t_prog *prog);
+
 //PIPEX_UTILS
-void		free_arr(void **arr);
-int			release_cmds(char **cmds[2]);
 void		close_fds(int arr[]);
-void		cpy_arr(char **dest, char **src);
 void		exit_prog(t_prog *prog, int exitstat);
+void		read_input(char *del, int out_fd);
 
 //COMMANDS
 int			handle_echo(char **command, int out_fd);
@@ -73,9 +78,9 @@ int			print_pwd(int out_fd);
 
 //PROG_CREATION
 // static t_prog	*init_prog(char *envp[]);
-// static void	get_infile(int argc, char *argv[], t_prog *prog);
-// static void	get_outfile(int argc, char *argv[], t_prog *prog);
-// static void	get_cmds(char *argv[], t_prog *prog);
+// static void		get_infile(int argc, char *argv[], t_prog *prog);
+// static void		get_outfile(int argc, char *argv[], t_prog *prog);
+// static void		get_cmds(char *argv[], t_prog *prog);
 t_prog		*prog_creation(int argc, char *argv[], char *env[]);
 
 #endif

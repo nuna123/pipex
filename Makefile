@@ -1,7 +1,7 @@
 NAME			=	pipex
 
 OBJ_DIR			=	objs/
-CFLAGS			=	-Wall -Werror -Wextra -fsanitize=address -g
+CFLAGS			=	-fsanitize=address -g
 #Sources
 SRC_FILES		=	pipex\
 					piper\

@@ -11,54 +11,7 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
-/* 
-char	*improved_trim(char *str, char *charset)
-{
-	char	*temp;
 
-	temp = ft_strtrim(str, charset);
-	free (str);
-	return (temp);
-}
-
-static int	split_extander(char **split)
-{
-	int	j;
-
-	j = 0;
-	while (++j && split[j])
-	{
-		split[0] = str_append (split[0], split[j], " ");
-		if (ft_strchr(split[j], '\'') || !split[j + 1])
-		{
-			split[j] = (free (split[j]), NULL);
-			return (j);
-		}
-		split[j] = (free (split[j]), NULL);
-	}
-	return (j);
-}
-
-char	**split_command(char *cmd)
-{
-	char	**split;
-	int		i;
-	int		j;
-
-	split = ft_split(cmd, ' ');
-	i = -1;
-	while (split[++i])
-	{
-		if (ft_strchr(split[i], '\''))
-		{
-			j = split_extander(&split[i]);
-			split[i] = improved_trim(split[i], "\'");
-			cpy_arr(&(split[i + 1]), &(split[i + j + 1]));
-		}
-	}
-	return (split);
-}
- */
 static char	*gfc_extander(char **split_path, char *cmd)
 {
 	int		i;
@@ -102,7 +55,7 @@ char	*get_full_cmd(t_prog *prog, char *cmd)
 	}
 	split_path = ft_split(path, ':');
 	cmd = gfc_extander(split_path, cmd);
-	free_arr((void **) split_path);
+	ft_arrfree((void **) split_path);
 	return (cmd);
 }
 
