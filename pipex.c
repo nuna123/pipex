@@ -53,7 +53,6 @@ static void	here_doc(t_prog *prog)
 int	main(int argc, char *argv[], char *env[])
 {
 	t_prog	*prog;
-	int		pipees[2];
 
 	if (argc == 1)
 		exit_prog(NULL, (printf("WRONG NUM OF ARGUMENTS!\n"), 1));
